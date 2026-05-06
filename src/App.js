@@ -39,6 +39,10 @@ function App() {
   const totalExpense = transactions
     .filter(t => t.type === 'expense')
     .reduce((sum, t) => sum + t.amount, 0);
+  
+  const thisMonthExpense = transactions
+    .filter(t=> t.type === 'expense' && new Date(t.date).getMonth()===new Date().getMonth())
+    .reduce((sum, t) => sum + t.amount, 0);
 
   const balance = totalIncome - totalExpense;
 
@@ -60,6 +64,10 @@ function App() {
         <div className="summary-card">
           <div className="label">Expenses</div>
           <div className="value expense">-${totalExpense.toFixed(2)}</div>
+        </div>
+        <div className="summary-card">
+          <div className='label'>This Month</div>
+          <div className='value expense'>-${thisMonthExpense.toFixed(2)}</div>
         </div>
       </div>
 
