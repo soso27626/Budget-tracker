@@ -1,4 +1,4 @@
-import { useState,  } from 'react';
+import { useState, useEffect  } from 'react';
 import './App.css';
 import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
@@ -56,8 +56,20 @@ function App() {
     .reduce((sum, t) => sum + t.amount, 0)
   })).filter(c => c.value > 0);
 
+  useEffect(() => {
+    const saved = localStorage.getItem('transactions');
+    if (saved) {
+      setTransactions(JSON.parse(saved));
+    }
+  }, []);
+useEffect(() => {
+  if (transactions.length > 0) {
+    localStorage.setItem('transactions', JSON.stringify(transactions));
+  }
+}, [transactions]);
 
-    const balance = totalIncome - totalExpense;
+
+  const balance = totalIncome - totalExpense;
 
   return (
     <div className="app">
