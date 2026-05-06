@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState,  } from 'react';
 import './App.css';
+import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
 function App() {
   const [transactions, setTransactions] = useState([]);
@@ -48,6 +49,14 @@ function App() {
     .filter(t=> t.type === 'income' && new Date(t.date).getMonth()===new Date().getMonth())
     .reduce((sum, t) => sum + t.amount, 0);
   
+  const expenseByCategory = categories.expense.map(cat => ({
+  name: cat,
+  value: transactions
+    .filter(t => t.type === 'expense' && t.category === cat)
+    .reduce((sum, t) => sum + t.amount, 0)
+  })).filter(c => c.value > 0);
+
+
     const balance = totalIncome - totalExpense;
 
   return (
@@ -109,6 +118,27 @@ function App() {
         <button className="add-btn" onClick={addTransaction}>Add</button>
       </div>
 
+      {expenseByCategory.length > 0 && (
+        <div className="form-card">
+          <h2>Expenses by Category</h2>
+          <PieChart width={400} height={300}>
+            <Pie
+              data={expenseByCategory}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={100}
+            >
+              {expenseByCategory.map((entry, index) => (
+                <Cell key={index} fill={['#f44336','#ff9800','#2196f3','#4caf50','#9c27b0','#00bcd4'][index % 6]} />
+              ))}
+            </Pie>
+            <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+            <Legend />
+          </PieChart>
+        </div>
+      )}
       <div className="transactions">
         <h2>Transactions</h2>
         {transactions.length === 0 && <p style={{ color: '#888' }}>No transactions yet</p >}
