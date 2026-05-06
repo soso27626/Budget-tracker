@@ -44,7 +44,11 @@ function App() {
     .filter(t=> t.type === 'expense' && new Date(t.date).getMonth()===new Date().getMonth())
     .reduce((sum, t) => sum + t.amount, 0);
 
-  const balance = totalIncome - totalExpense;
+  const thisMonthIncome = transactions
+    .filter(t=> t.type === 'income' && new Date(t.date).getMonth()===new Date().getMonth())
+    .reduce((sum, t) => sum + t.amount, 0);
+  
+    const balance = totalIncome - totalExpense;
 
   return (
     <div className="app">
@@ -68,6 +72,10 @@ function App() {
         <div className="summary-card">
           <div className='label'>This Month</div>
           <div className='value expense'>-${thisMonthExpense.toFixed(2)}</div>
+        </div>
+        <div className="summary-card">
+          <div className='label'>This Month Income</div>
+          <div className='value income'>+${thisMonthIncome.toFixed(2)}</div>
         </div>
       </div>
 
